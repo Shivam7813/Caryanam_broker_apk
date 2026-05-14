@@ -274,17 +274,38 @@ export default function MyListingsScreen({ navigation }) {
             JSON.parse(
               pendingProperty
             );
-            console.log(
-              'PENDING PROPERTY:',
-              parsed
+
+          // ✅ prevent empty/default property
+          const hasValidData =
+
+            parsed &&
+            (
+              parsed.title ||
+              parsed.apartmentName ||
+              parsed.location ||
+              parsed.address ||
+              parsed.price ||
+              parsed.rent ||
+              parsed.image ||
+              parsed.imageUri
             );
 
-          mapped.unshift({
-            ...parsed,
-            status: 'PENDING',
-          });
+          if (hasValidData) {
 
-        } catch {}
+            mapped.unshift({
+              ...parsed,
+              status: 'PENDING',
+            });
+
+          }
+
+        } catch (e) {
+
+          console.log(
+            'PENDING PROPERTY ERROR:',
+            e
+          );
+        }
       }
 
       console.log(
@@ -576,6 +597,9 @@ export default function MyListingsScreen({ navigation }) {
 
         <ScrollView
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingBottom: 120,
+          }}
         >
 
           <View

@@ -11,6 +11,11 @@ import {
   registerUserApi,
   registerOwnerApi,
   registerAdminApi,
+  sendEmailOtpApi,
+  verifyEmailOtpApi,
+  forgotPasswordApi,
+  verifyForgotOtpApi,
+  resetPasswordApi,
 } from '../api/authApi';
 
 export const AuthContext =
@@ -292,6 +297,180 @@ export const AuthProvider = ({
       }
     };
 
+    const sendEmailOtp = async data => {
+      try {
+
+        const res =
+          await sendEmailOtpApi({
+            email: data.email,
+          });
+
+        console.log(
+          'SEND OTP RESPONSE:',
+          res?.data
+        );
+
+        return {
+          success: true,
+          message:
+            res?.data?.message ||
+            'OTP Sent Successfully',
+        };
+
+      } catch (error) {
+
+  console.log(
+    'FULL OTP ERROR:',
+    JSON.stringify(error, null, 2)
+  );
+
+  console.log(
+    'ERROR MESSAGE:',
+    error.message
+  );
+
+  console.log(
+    'ERROR RESPONSE:',
+    error.response
+  );
+
+  console.log(
+    'ERROR REQUEST:',
+    error.request
+  );
+
+  const msg =
+    error?.response?.data?.message ||
+    error.message ||
+    'Failed to send OTP';
+
+  return {
+    success: false,
+    message: msg,
+  };
+}
+    };
+
+    const verifyEmailOtp = async ({
+  email,
+  otp,
+}) => {
+  try {
+
+    const res =
+      await verifyEmailOtpApi({
+        email,
+        otp,
+      });
+
+    return {
+      success: true,
+      message:
+        res?.data?.message ||
+        'Email Verified',
+    };
+
+  } catch (error) {
+
+    const msg =
+      error?.response?.data?.message ||
+      'Invalid OTP';
+
+    return {
+      success: false,
+      message: msg,
+    };
+  }
+};
+
+const sendForgotOtp = async email => {
+  try {
+
+    const res =
+      await forgotPasswordApi({
+        email,
+      });
+
+    return {
+      success: true,
+      message:
+        res?.data?.message ||
+        'OTP Sent',
+    };
+
+  } catch (error) {
+
+    const msg =
+      error?.response?.data?.message ||
+      'Failed';
+
+    return {
+      success: false,
+      message: msg,
+    };
+  }
+};
+
+const verifyForgotOtp = async ({
+  email,
+  otp,
+}) => {
+  try {
+
+    const res =
+      await verifyForgotOtpApi({
+        email,
+        otp,
+      });
+
+    return {
+      success: true,
+      message:
+        res?.data?.message ||
+        'OTP Verified',
+    };
+
+  } catch (error) {
+
+    const msg =
+      error?.response?.data?.message ||
+      'Invalid OTP';
+
+    return {
+      success: false,
+      message: msg,
+    };
+  }
+};
+
+const resetPassword = async data => {
+  try {
+
+    const res =
+      await resetPasswordApi(data);
+
+    return {
+      success: true,
+      message:
+        res?.data?.message ||
+        'Password Reset Success',
+    };
+
+  } catch (error) {
+
+    const msg =
+      error?.response?.data?.message ||
+      'Reset Failed';
+
+    return {
+      success: false,
+      message: msg,
+    };
+  }
+};
+
+
+
   /* ================= LOGOUT ================= */
 
   const logout =
@@ -334,6 +513,11 @@ export const AuthProvider = ({
         login,
         register,
         logout,
+        sendEmailOtp,
+        verifyEmailOtp,
+        sendForgotOtp,
+        verifyForgotOtp,
+        resetPassword,
       }}
     >
       {children}

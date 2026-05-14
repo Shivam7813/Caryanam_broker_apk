@@ -77,7 +77,7 @@ export default function PremiumScreen({ navigation, route }) {
             {
               text: 'OK',
               onPress: () =>
-                navigation.goBack(),
+                navigation.replace('MainApp')
             },
           ]
         );
@@ -116,7 +116,7 @@ export default function PremiumScreen({ navigation, route }) {
           {
             text: 'OK',
             onPress: () =>
-              navigation.goBack(),
+              navigation.replace('MainApp')
           },
         ]
       );

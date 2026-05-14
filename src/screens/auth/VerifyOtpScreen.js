@@ -1,4 +1,4 @@
-// src/screens/auth/ForgotPasswordScreen.js
+// src/screens/auth/VerifyOtpScreen.js
 
 import React from 'react';
 
@@ -7,7 +7,7 @@ import {
   Text,
 } from 'react-native';
 
-export default function ForgotPasswordScreen() {
+export default function VerifyOtpScreen() {
 
   return (
     <View
@@ -18,7 +18,7 @@ export default function ForgotPasswordScreen() {
       }}
     >
       <Text>
-        Forgot Password Screen
+        Verify OTP Screen
       </Text>
     </View>
   );

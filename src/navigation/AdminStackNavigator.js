@@ -19,7 +19,7 @@ import SettingsScreen from '../screens/admin/SettingsScreen';
 
 /* OPTIONAL EXTRA */
 import AnalyticsScreen from '../screens/admin/AnalyticsScreen';
-import ProfileScreen from '../screens/admin/ProfileScreen';
+import AdminProfileScreen from '../screens/admin/ProfileScreen';
 
 /* SHARED */
 import PropertyDetailsScreen from '../screens/user/PropertyDetailsScreen';
@@ -110,9 +110,7 @@ export default function AdminStackNavigator() {
 
       <Stack.Screen
         name="Profile"
-        component={
-          ProfileScreen
-        }
+        component={AdminProfileScreen}
       />
 
       {/* SHARED */}

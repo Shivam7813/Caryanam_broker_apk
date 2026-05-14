@@ -276,12 +276,12 @@ export default function LandingScreen({
             flats,
             villas and family
             homes from trusted
-            owners & brokers.
+            owners.
           </Text>
 
           <View style={styles.searchBox}>
 
-            <Text style={styles.searchIcon}>
+            {/* <Text style={styles.searchIcon}>
               ⌕
             </Text>
 
@@ -293,12 +293,15 @@ export default function LandingScreen({
                 setSearch
               }
               style={styles.input}
-            />
+            /> */}
 
           </View>
 
           <TouchableOpacity
             style={styles.searchBtn}
+            onPress={() =>
+              navigation.navigate('Login')
+            }
           >
 
             <Text style={styles.searchTxt}>
@@ -310,7 +313,7 @@ export default function LandingScreen({
         </View>
 
         {/* CATEGORY */}
-        <Text style={styles.section}>
+        {/* <Text style={styles.section}>
           Categories
         </Text>
 
@@ -343,10 +346,10 @@ export default function LandingScreen({
             )
           )}
 
-        </ScrollView>
+        </ScrollView> */}
 
         {/* LISTINGS */}
-        <Text style={styles.section}>
+        {/* <Text style={styles.section}>
           Popular Homes
         </Text>
 
@@ -514,7 +517,7 @@ export default function LandingScreen({
             )
           )}
 
-        </View>
+        </View> */}
 
         {/* CTA */}
         <View style={styles.cta}>
@@ -539,7 +542,7 @@ export default function LandingScreen({
           >
 
             <Text style={styles.postTxt}>
-              List Home Free
+              List Home 
             </Text>
 
           </TouchableOpacity>

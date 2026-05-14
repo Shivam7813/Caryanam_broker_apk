@@ -356,9 +356,7 @@ export default function HomeScreen({
               styles.profileBtn
             }
             onPress={() =>
-              navigation.navigate(
-                'Profile'
-              )
+              navigation.navigate('ProfileTab')
             }
           >
 
@@ -436,9 +434,7 @@ export default function HomeScreen({
               styles.searchBtn
             }
             onPress={() =>
-              navigation.navigate(
-                'PropertyList'
-              )
+              navigation.navigate('ActionTab')
             }
           >
 
@@ -455,7 +451,7 @@ export default function HomeScreen({
         </View>
 
         {/* CATEGORY */}
-        <Text style={styles.section}>
+        {/* <Text style={styles.section}>
           Categories
         </Text>
 
@@ -491,11 +487,11 @@ export default function HomeScreen({
             )
           )}
 
-        </ScrollView>
+        </ScrollView> */}
 
         {/* LISTINGS */}
         <Text style={styles.section}>
-          Popular Homes
+          Properties
         </Text>
 
         <View style={styles.cardWrap}>
@@ -719,6 +715,7 @@ const styles = StyleSheet.create({
 
   input: {
     flex: 1,
+    color: '#0F172A',
     paddingVertical: 14,
     marginLeft: 10,
   },
@@ -743,6 +740,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 18,
     marginTop: 26,
     marginBottom: 14,
+    color: '#0F172A',
+    
   },
 
   horizontalWrap: {

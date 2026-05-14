@@ -24,6 +24,9 @@ import {
 import SplashScreen from '../screens/auth/SplashScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
+import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
+import VerifyOtpScreen from '../screens/auth/VerifyOtpScreen';
+import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
 
 /* COMMON */
 import LandingScreen from '../components/common/LandingScreen';
@@ -112,6 +115,20 @@ export default function AppNavigator() {
               component={
                 RegisterScreen
               }
+            />
+            <Stack.Screen
+              name="ForgotPassword"
+              component={ForgotPasswordScreen}
+            />
+
+            <Stack.Screen
+              name="VerifyOtp"
+              component={VerifyOtpScreen}
+            />
+
+            <Stack.Screen
+              name="ResetPassword"
+              component={ResetPasswordScreen}
             />
           </>
         ) : (

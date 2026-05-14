@@ -1,7 +1,3 @@
-// src/screens/auth/RegisterScreen.js
-// FULL UPDATED FILE
-// Backend Validation Ready + Premium UI + Keyboard Fixed
-
 import React, {
   useState,
   useContext,
@@ -32,8 +28,11 @@ import {
 export default function RegisterScreen({
   navigation,
 }) {
-  const { register } =
-    useContext(AuthContext);
+  const {
+    register,
+    sendEmailOtp,
+    verifyEmailOtp,
+  } = useContext(AuthContext);
 
   const [role, setRole] =
     useState('USER');
@@ -53,6 +52,26 @@ export default function RegisterScreen({
   const [password,
     setPassword] =
     useState('');
+
+  const [otp,
+  setOtp] =
+  useState('');
+
+  const [otpSent,
+    setOtpSent] =
+    useState(false);
+
+  const [emailVerified,
+    setEmailVerified] =
+    useState(false);
+
+  const [otpLoading,
+    setOtpLoading] =
+    useState(false);
+
+  const [verifyLoading,
+    setVerifyLoading] =
+    useState(false);
 
   const [loading,
     setLoading] =
@@ -93,81 +112,215 @@ export default function RegisterScreen({
       );
     };
 
-  const handleRegister =
-    async () => {
-      const name =
-        fullName.trim();
+    const handleSendOtp =
+      async () => {
 
-      const phone =
-        mobile.trim();
+        const mail =
+          email
+            .trim()
+            .toLowerCase();
 
-      const mail =
-        email
-          .trim()
-          .toLowerCase();
+        if (
+          !validateEmail(mail)
+        ) {
 
-      if (
-        !name ||
-        !phone ||
-        !mail ||
-        !password.trim()
-      ) {
+          Alert.alert(
+            'Invalid Email',
+            'Enter valid gmail address.'
+          );
+
+          return;
+        }
+
+        try {
+
+          setOtpLoading(true);
+
+          const response =
+            await sendEmailOtp({
+            email: mail,
+            });
+
+          if (
+              response?.success === true
+            ) {
+
+            setOtpSent(true);
+
+            Alert.alert(
+              'Success',
+              response.message
+            );
+
+          } else {
+
+            Alert.alert(
+              'Failed',
+              response.message
+            );
+          }
+
+        } catch (error) {
+
+          Alert.alert(
+            'Failed',
+            'Unable to send OTP.'
+          );
+
+        } finally {
+
+          setOtpLoading(false);
+        }
+      };
+
+      const handleVerifyOtp =
+        async () => {
+
+          if (
+            !otp.trim()
+          ) {
+
+            Alert.alert(
+              'Required',
+              'Please enter OTP.'
+            );
+
+            return;
+          }
+
+          try {
+
+            setVerifyLoading(true);
+
+            const response =
+              await verifyEmailOtp({
+                email:
+                  email
+                    .trim()
+                    .toLowerCase(),
+                otp:
+                  otp.trim(),
+              });
+
+            if (
+              response.success
+            ) {
+
+              setEmailVerified(
+                true
+              );
+
+              Alert.alert(
+                'Success',
+                'Email verified successfully.'
+              );
+
+            } else {
+
+              Alert.alert(
+                'Failed',
+                response.message
+              );
+            }
+
+          } catch (error) {
+
+            Alert.alert(
+              'Failed',
+              'OTP verification failed.'
+            );
+
+          } finally {
+
+            setVerifyLoading(
+              false
+            );
+          }
+        };
+        const handleRegister =
+          async () => {
+            const name =
+              fullName.trim();
+
+            const phone =
+              mobile.trim();
+
+            const mail =
+              email
+                .trim()
+                .toLowerCase();
+
+            if (
+              !name ||
+              !phone ||
+              !mail ||
+              !password.trim()
+            ) {
+              Alert.alert(
+                'Required',
+                'Please fill all fields.'
+              );
+              return;
+            }
+
+            if (
+              !validateName(
+                name
+              )
+            ) {
+              Alert.alert(
+                'Invalid Name',
+                'Only letters and spaces allowed.'
+              );
+              return;
+            }
+
+            if (
+              phone.length !==
+                10 ||
+              !/^\d+$/.test(
+                phone
+              )
+            ) {
+              Alert.alert(
+                'Invalid Mobile',
+                'Enter valid 10 digit mobile number.'
+              );
+              return;
+            }
+
+            if (
+              !validateEmail(
+                mail
+              )
+            ) {
+              Alert.alert(
+                'Invalid Email',
+                'Only Gmail addresses allowed.'
+              );
+              return;
+            }
+
+            if (
+              password.length <
+              6
+            ) {
+              Alert.alert(
+                'Weak Password',
+                'Password must be minimum 6 characters.'
+              );
+              return;
+            }
+
+            if (!emailVerified) {
+
         Alert.alert(
-          'Required',
-          'Please fill all fields.'
+          'Verify Email',
+          'Please verify your email first.'
         );
+
         return;
       }
-
-      if (
-        !validateName(
-          name
-        )
-      ) {
-        Alert.alert(
-          'Invalid Name',
-          'Only letters and spaces allowed.'
-        );
-        return;
-      }
-
-      if (
-        phone.length !==
-          10 ||
-        !/^\d+$/.test(
-          phone
-        )
-      ) {
-        Alert.alert(
-          'Invalid Mobile',
-          'Enter valid 10 digit mobile number.'
-        );
-        return;
-      }
-
-      if (
-        !validateEmail(
-          mail
-        )
-      ) {
-        Alert.alert(
-          'Invalid Email',
-          'Only Gmail addresses allowed.'
-        );
-        return;
-      }
-
-      if (
-        password.length <
-        6
-      ) {
-        Alert.alert(
-          'Weak Password',
-          'Password must be minimum 6 characters.'
-        );
-        return;
-      }
-
       try {
         setLoading(true);
 
@@ -358,6 +511,96 @@ export default function RegisterScreen({
               }
               style={styles.input}
             />
+
+            <TouchableOpacity
+              style={[
+                styles.otpBtn,
+                emailVerified &&
+                  styles.verifiedBtn,
+              ]}
+              onPress={
+                handleSendOtp
+              }
+              disabled={
+                otpLoading ||
+                emailVerified
+              }
+            >
+              {otpLoading ? (
+
+                <ActivityIndicator
+                  color="#fff"
+                />
+
+              ) : (
+
+                <Text
+                  style={
+                    styles.otpBtnTxt
+                  }
+                >
+                  {emailVerified
+                    ? 'Email Verified'
+                    : 'Send OTP'}
+                </Text>
+              )}
+            </TouchableOpacity>
+
+            {otpSent &&
+              !emailVerified && (
+                <>
+                  <Text
+                    style={
+                      styles.label
+                    }
+                  >
+                    Enter OTP
+                  </Text>
+
+                  <TextInput
+                    placeholder="Enter 6 digit OTP"
+                    placeholderTextColor="#94A3B8"
+                    keyboardType="number-pad"
+                    maxLength={6}
+                    value={otp}
+                    onChangeText={
+                      setOtp
+                    }
+                    style={
+                      styles.input
+                    }
+                  />
+
+                  <TouchableOpacity
+                    style={
+                      styles.verifyBtn
+                    }
+                    onPress={
+                      handleVerifyOtp
+                    }
+                    disabled={
+                      verifyLoading
+                    }
+                  >
+                    {verifyLoading ? (
+
+                      <ActivityIndicator
+                        color="#fff"
+                      />
+
+                    ) : (
+
+                      <Text
+                        style={
+                          styles.btnTxt
+                        }
+                      >
+                        Verify OTP
+                      </Text>
+                    )}
+                  </TouchableOpacity>
+                </>
+            )}
 
             <Text style={styles.label}>
               Password
@@ -610,5 +853,32 @@ const styles =
     link: {
       color: '#4338CA',
       fontWeight: '900',
+    },
+    otpBtn: {
+      height: 52,
+      backgroundColor: '#4338CA',
+      borderRadius: 14,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 14,
+    },
+
+    otpBtnTxt: {
+      color: '#fff',
+      fontSize: 15,
+      fontWeight: '700',
+    },
+
+    verifyBtn: {
+      height: 52,
+      backgroundColor: '#0F172A',
+      borderRadius: 14,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 14,
+    },
+
+    verifiedBtn: {
+      backgroundColor: '#16A34A',
     },
   });

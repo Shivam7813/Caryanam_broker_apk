@@ -14,7 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../../context/AuthContext';
 
-export default function ProfileScreen({ navigation }) {
+export default function AdminProfileScreen({ navigation }) {
 
   const { logout } = useContext(AuthContext);
 
@@ -29,10 +29,13 @@ export default function ProfileScreen({ navigation }) {
   }, []);
 
   const loadAdminData = async () => {
+
     try {
+
       const storedData = await AsyncStorage.getItem('userData');
 
       if (storedData) {
+
         const parsed = JSON.parse(storedData);
 
         setAdmin({
@@ -40,96 +43,206 @@ export default function ProfileScreen({ navigation }) {
           email: parsed.email || 'No Email',
           role: parsed.role || 'ADMIN',
         });
+
       }
+
     } catch (e) {
       console.log('ERROR:', e);
     }
+
   };
 
   const handleLogout = () => {
-    Alert.alert('Logout', 'Are you sure you want to logout?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Logout',
-        style: 'destructive',
-        onPress: async () => {
-          await logout();
-          Alert.alert('Success', 'Logged out successfully');
+
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
         },
-      },
-    ]);
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await logout();
+            } catch (e) {
+              console.log('Logout Error', e);
+            }
+          },
+        },
+      ]
+    );
+
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
+    <SafeAreaView
+      style={styles.safeArea}
+      edges={['top', 'left', 'right']}
+    >
 
-      <StatusBar backgroundColor="#F8FAFC" barStyle="dark-content" />
+      <StatusBar
+        backgroundColor="#F8FAFC"
+        barStyle="dark-content"
+      />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
+      {/* HEADER */}
 
-        {/* HEADER */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={styles.back}>←</Text>
-          </TouchableOpacity>
+      <View style={styles.header}>
 
-          <Text style={styles.title}>Admin Profile</Text>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={styles.back}>
+            ←
+          </Text>
+        </TouchableOpacity>
 
-          <View style={{ width: 24 }} />
-        </View>
+        <Text style={styles.title}>
+          Admin Profile
+        </Text>
+
+        <View style={{ width: 24 }} />
+
+      </View>
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scroll}
+      >
 
         {/* PROFILE CARD */}
+
         <View style={styles.profileCard}>
+
           <View style={styles.avatar}>
+
             <Text style={styles.avatarTxt}>
-              {(admin.name || 'A')[0]}
+              {(admin.name || 'A')[0].toUpperCase()}
             </Text>
+
           </View>
 
-          <Text style={styles.name}>{admin.name}</Text>
-          <Text style={styles.email}>{admin.email}</Text>
+          <Text style={styles.name}>
+            {admin.name}
+          </Text>
 
-          <View style={styles.roleBox}>
-            <Text style={styles.role}>{admin.role}</Text>
-          </View>
+          <Text style={styles.role}>
+            System Administrator
+          </Text>
+
         </View>
 
-        {/* OPTIONS */}
-        <View style={styles.card}>
-          <TouchableOpacity style={styles.item}>
-            <Text style={styles.itemText}>Edit Profile</Text>
-          </TouchableOpacity>
+        {/* DETAILS */}
 
-          <TouchableOpacity style={styles.item}>
-            <Text style={styles.itemText}>Change Password</Text>
-          </TouchableOpacity>
+        <View style={styles.detailsCard}>
 
-          <TouchableOpacity style={styles.item}>
-            <Text style={styles.itemText}>Settings</Text>
-          </TouchableOpacity>
+          <Text style={styles.sectionTitle}>
+            Account Details
+          </Text>
+
+          <View style={styles.detailRow}>
+
+            <Text style={styles.label}>
+              Email Address
+            </Text>
+
+            <Text style={styles.value}>
+              {admin.email}
+            </Text>
+
+          </View>
+
+          <View style={styles.divider} />
+
+          <View style={styles.detailRow}>
+
+            <Text style={styles.label}>
+              Access Level
+            </Text>
+
+            <Text style={styles.value}>
+              Full Administrative Access
+            </Text>
+
+          </View>
+
+          <View style={styles.divider} />
+
+          <View style={styles.detailRow}>
+
+            <Text style={styles.label}>
+              Account Role
+            </Text>
+
+            <Text style={styles.value}>
+              {admin.role}
+            </Text>
+
+          </View>
+
+        </View>
+
+        {/* INFO CARD */}
+
+        <View style={styles.infoCard}>
+
+          <Text style={styles.infoTitle}>
+            Administrative Control Panel
+          </Text>
+
+          <Text style={styles.infoText}>
+            Manage platform operations, monitor users,
+            maintain listings, and oversee overall
+            system management through the admin dashboard.
+          </Text>
+
         </View>
 
         {/* LOGOUT */}
-        <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
-          <Text style={styles.logoutText}>Logout</Text>
+
+        <TouchableOpacity
+          style={styles.logoutBtn}
+          onPress={handleLogout}
+        >
+
+          <Text style={styles.logoutText}>
+            Logout
+          </Text>
+
         </TouchableOpacity>
 
+        {/* FOOTER */}
+
+        <View style={styles.footer}>
+
+          <Text style={styles.footerText}>
+            Caryanam Broker • Administration Panel
+          </Text>
+
+        </View>
+
       </ScrollView>
+
     </SafeAreaView>
   );
 }
 
-/* ================= STYLES ================= */
-
 const styles = StyleSheet.create({
+
   safeArea: {
     flex: 1,
     backgroundColor: '#F8FAFC',
   },
 
+  scroll: {
+    paddingBottom: 40,
+  },
+
   header: {
-    paddingHorizontal: 18,
-    paddingVertical: 14,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -142,92 +255,131 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '900',
     color: '#0F172A',
   },
 
   profileCard: {
-    marginHorizontal: 18,
-    backgroundColor: '#fff',
-    borderRadius: 24,
-    padding: 24,
+    marginHorizontal: 20,
+    marginTop: 10,
+    backgroundColor: '#4338CA',
+    borderRadius: 30,
+    paddingVertical: 34,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E0E7FF',
   },
 
   avatar: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: '#4338CA',
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#5B4DF1',
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   avatarTxt: {
     color: '#fff',
-    fontSize: 28,
+    fontSize: 34,
     fontWeight: '900',
   },
 
   name: {
-    marginTop: 14,
-    fontSize: 20,
+    marginTop: 18,
+    fontSize: 24,
     fontWeight: '900',
-    color: '#0F172A',
-  },
-
-  email: {
-    marginTop: 6,
-    color: '#64748B',
-  },
-
-  roleBox: {
-    marginTop: 12,
-    backgroundColor: '#EEF2FF',
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 14,
+    color: '#fff',
   },
 
   role: {
-    color: '#4338CA',
-    fontWeight: '800',
+    marginTop: 6,
+    color: '#E0E7FF',
+    fontSize: 14,
+    fontWeight: '600',
   },
 
-  card: {
-    marginHorizontal: 18,
-    marginTop: 16,
+  detailsCard: {
+    marginHorizontal: 20,
+    marginTop: 20,
     backgroundColor: '#fff',
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: '#E0E7FF',
+    borderRadius: 26,
+    padding: 22,
   },
 
-  item: {
-    padding: 18,
-    borderBottomWidth: 1,
-    borderColor: '#E0E7FF',
-  },
-
-  itemText: {
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '900',
     color: '#0F172A',
+    marginBottom: 18,
+  },
+
+  detailRow: {
+    paddingVertical: 6,
+  },
+
+  label: {
+    fontSize: 13,
+    color: '#64748B',
+    marginBottom: 6,
+  },
+
+  value: {
+    fontSize: 16,
     fontWeight: '700',
+    color: '#0F172A',
+  },
+
+  divider: {
+    height: 1,
+    backgroundColor: '#E2E8F0',
+    marginVertical: 14,
+  },
+
+  infoCard: {
+    marginHorizontal: 20,
+    marginTop: 20,
+    backgroundColor: '#EEF2FF',
+    borderRadius: 24,
+    padding: 22,
+  },
+
+  infoTitle: {
+    color: '#312E81',
+    fontSize: 18,
+    fontWeight: '900',
+    marginBottom: 10,
+  },
+
+  infoText: {
+    color: '#475569',
+    lineHeight: 23,
+    fontSize: 14,
   },
 
   logoutBtn: {
-    marginHorizontal: 18,
+    marginHorizontal: 20,
     marginTop: 20,
-    backgroundColor: '#FEE2E2',
-    padding: 16,
-    borderRadius: 18,
+    backgroundColor: '#DC2626',
+    paddingVertical: 18,
+    borderRadius: 22,
     alignItems: 'center',
   },
 
   logoutText: {
-    color: '#DC2626',
+    color: '#fff',
+    fontSize: 16,
     fontWeight: '900',
   },
+
+  footer: {
+    marginTop: 28,
+    alignItems: 'center',
+  },
+
+  footerText: {
+    color: '#94A3B8',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+
 });

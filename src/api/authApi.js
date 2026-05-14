@@ -72,3 +72,52 @@ export const registerAdminApi =
       }
     );
   };
+
+  export const sendEmailOtpApi = data => {
+  return api.post(
+    '/api/auth/send-email-otp',
+    {
+      email: data.email,
+    }
+  );
+};
+
+export const verifyEmailOtpApi = data => {
+  return api.post(
+    '/api/auth/verify-email-otp',
+    {
+      email: data.email,
+      otp: data.otp,
+    }
+  );
+};
+
+export const forgotPasswordApi = data => {
+  return api.post(
+    '/api/auth/forgot-password',
+    {
+      email: data.email,
+    }
+  );
+};
+
+export const verifyForgotOtpApi = data => {
+  return api.post(
+    '/api/auth/verify-otp',
+    {
+      email: data.email,
+      otp: data.otp,
+    }
+  );
+};
+
+export const resetPasswordApi = data => {
+  return api.post(
+    '/api/auth/reset-password',
+    {
+      email: data.email,
+      newPassword: data.newPassword,
+      confirmPassword: data.confirmPassword,
+    }
+  );
+};
